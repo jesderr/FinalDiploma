@@ -11,12 +11,12 @@ public class TransferImage implements ImageMethods {
             return null;
         }
 
-        int[][] arrayOfPixels = new int[image.getHeight()][image.getWidth()];
-
         final byte[] bytesOfPixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+        final boolean hasAlphaChannel = image.getAlphaRaster() != null;
+
         final int width = image.getWidth();
         final int height = image.getHeight();
-        final boolean hasAlphaChannel = image.getAlphaRaster() != null;
+        int[][] arrayOfPixels = new int[height][width];
 
         if (hasAlphaChannel) {
             final int pixelLength = 4;
@@ -26,9 +26,15 @@ public class TransferImage implements ImageMethods {
                 argb += ((int) bytesOfPixels[pixel + 1] & 0xff); // blue
                 argb += (((int) bytesOfPixels[pixel + 2] & 0xff) << 8); // green
                 argb += (((int) bytesOfPixels[pixel + 3] & 0xff) << 16); // red
-                arrayOfPixels[row][col] = argb;
+
+//                argb += (((int) bytesOfPixels[pixel] >> 24) & 0xff);
+//                argb += (((int) bytesOfPixels[pixel + 1] >> 16) & 0xff);
+//                argb += (((int) bytesOfPixels[pixel + 2] >> 8) & 0xff);
+//                argb += ((int) bytesOfPixels[pixel + 3] & 0xff);
+
+                arrayOfPixels[col][row] = argb;
                 col++;
-                if (col == width) {
+                if (col == image.getWidth()) {
                     col = 0;
                     row++;
                 }
@@ -41,19 +47,17 @@ public class TransferImage implements ImageMethods {
                 argb += ((int) bytesOfPixels[pixel] & 0xff); // blue
                 argb += (((int) bytesOfPixels[pixel + 1] & 0xff) << 8); // green
                 argb += (((int) bytesOfPixels[pixel + 2] & 0xff) << 16); // red
-                arrayOfPixels[row][col] = argb;
+//                argb += (((int) bytesOfPixels[pixel + 1] >> 16) & 0xff);
+//                argb += (((int) bytesOfPixels[pixel + 2] >> 8) & 0xff);
+//                argb += ((int) bytesOfPixels[pixel + 3] & 0xff);
+                arrayOfPixels[col][row] = argb;
                 col++;
-                if (col == width) {
+                if (col == image.getWidth()) {
                     col = 0;
                     row++;
                 }
             }
         }
-//        for (int i=0; i<image.getWidth(); i++) {
-//            for(int j=0; j< image.getHeight(); j++) {
-//                arrayOfPixels[i][j] = image.getRGB(i, j);
-//            }
-//        }
         return arrayOfPixels;
     }
 

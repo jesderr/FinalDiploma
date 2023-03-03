@@ -25,6 +25,18 @@ public class Main {
             System.out.println("\n");
         }
 
-        transferImage.convertToImage(pixels,bufferedImage.getWidth(),bufferedImage.getHeight());
+//        FourierClass fourierClass = new FourierClass();
+//
+//        int[][] signals = fourierClass.fourierTransform(pixels);
+
+
+//        for (int i = 0; i < signals.length; i++) {
+//            for (int j = 0; j < signals[i].length; j++) {
+//                System.out.print("Pixel[" + i + "]" + "[" + j + "]=" + signals[i][j] + " ");
+//            }
+//            System.out.println("\n");
+//        }
+
+        transferImage.convertToImage(pixels, bufferedImage.getWidth(), bufferedImage.getHeight());
     }
 }
