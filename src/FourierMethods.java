@@ -1,8 +1,6 @@
 public interface FourierMethods {
-    public int[][] fourierTransform(int[][] signals);
-
-
-    public int[][] fourierInverseTransform(int[][] signals);
+    public Complex[][] fourierTransform(int[][] input);
+    public int[][] fourierInverseTransform(Complex[][] signals);
 
 
 }

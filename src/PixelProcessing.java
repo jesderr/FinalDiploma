@@ -1,3 +1,5 @@
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 
 public class PixelProcessing implements ProcessingMethods {
 
