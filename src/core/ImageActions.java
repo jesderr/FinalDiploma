@@ -1,10 +1,11 @@
+package core;
 
 import java.awt.image.BufferedImage;
 
-public interface ImageMethods {
+public interface ImageActions {
     public int[][] convertToPixels(BufferedImage image);
 
-    public void saveGrayImage(int[][] pixels);
+    public BufferedImage saveGrayImage(int[][] pixels);
 
     public void convertToImage(int[][] pixels);
 

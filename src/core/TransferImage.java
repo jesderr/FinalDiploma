@@ -1,3 +1,5 @@
+package core;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -6,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 
-public class TransferImage implements ImageMethods {
+public class TransferImage implements ImageActions {
 
     public int[][] convertToPixels(BufferedImage image) {
 
@@ -66,7 +68,7 @@ public class TransferImage implements ImageMethods {
 
         for (int x = 0; x < height; x++) {
             for (int y = 0; y < width; y++) {
-                int rgb = image.getRGB(x, y);
+                int rgb = image.getRGB(y, x);
                 Color color = new Color(rgb);
                 int grayscale = (color.getRed() + color.getGreen() + color.getBlue()) / 3;
                 pixels[x][y] = grayscale;
@@ -75,7 +77,7 @@ public class TransferImage implements ImageMethods {
         return pixels;
     }
 
-    public void saveGrayImage(int[][] pixels) {
+    public BufferedImage saveGrayImage(int[][] pixels) {
         int height = pixels.length;
         int width = pixels[0].length;
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
@@ -84,7 +86,7 @@ public class TransferImage implements ImageMethods {
                 int grayscale = pixels[i][j];
                 int rgb = ((grayscale << 16) & 0xff0000) |
                         ((grayscale << 8) & 0xff00) | (grayscale & 0xff);
-                image.setRGB(i, j, rgb);
+                image.setRGB(j, i, rgb);
             }
         }
         try {
@@ -92,6 +94,22 @@ public class TransferImage implements ImageMethods {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return image;
+    }
+    public int[][] grayToRGB(int[][] grayPixels){
+        int height = grayPixels.length;
+        int width = grayPixels[0].length;
+        int[][] rgbPixels = new int[height][width];
+
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                int gray = grayPixels[i][j];
+                int rgb = (gray << 16) | (gray << 6) | gray;
+                rgbPixels[i][j] = rgb;
+            }
+        }
+        return rgbPixels;
     }
 
     public int[][] imageToGrayPixels(BufferedImage image) {
@@ -206,20 +224,7 @@ public class TransferImage implements ImageMethods {
         return arrayOfPixels;
     }
 
-    public int[][] grayToRGB(int[][] grayPixels){
-        int height = grayPixels.length;
-        int width = grayPixels[0].length;
-        int[][] rgbPixels = new int[height][width];
 
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                int gray = grayPixels[i][j];
-                int rgb = (gray << 16) | (gray << 6) | gray;
-                rgbPixels[i][j] = rgb;
-            }
-        }
-        return rgbPixels;
-    }
 
 
 public int[][] pixelsToGray(int[][] pixels) {

@@ -1,8 +1,28 @@
-public class Filters {
-    //спросить у брата.
-    FourierClass f = new FourierClass();
+package core;
+
+import java.awt.image.BufferedImage;
+
+public class FilterService {
+    FourierService f = new FourierService();
     //параметры порядок фильтра и частоту среза,чтобы определить какие частоты следует пропустить
     // или ослабить
+
+    public double getMaxDistanse(BufferedImage image){
+        int rows = image.getHeight();
+        int cols = image.getWidth();
+        int centerX = cols / 2;
+        int centerY = rows / 2;
+        double maxDistance = Double.MIN_VALUE;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                double distance = Math.sqrt(Math.pow(i - centerY, 2) + Math.pow(j - centerX, 2));
+                if(distance > maxDistance){
+                    maxDistance = distance;
+                }
+            }
+        }
+        return maxDistance;
+    }
     public Complex[][] butterworthFilter(Complex[][] imageFFT, double cutoff, int order) {
         int rows = imageFFT.length;
         int cols = imageFFT[0].length;
@@ -10,17 +30,20 @@ public class Filters {
         int centerY = rows / 2;
 
         Complex[][] filteredFFT = new Complex[rows][cols];
-
+//        double maxDistance = Double.MIN_VALUE;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 double distance = Math.sqrt(Math.pow(i - centerY, 2) + Math.pow(j - centerX, 2));
+//                if(distance > maxDistance){
+//                    maxDistance = distance;
+//                }
                 double butterworth = 1 / (1 + Math.pow(distance / cutoff, 2 * order));
                 filteredFFT[i][j] = imageFFT[i][j].multiply(butterworth);
             }
         }
+//        System.out.println("Max distance = "+ maxDistance);
         return filteredFFT;
     }
-
 
     //фильтр высоких частот(удаляет низкочастотные компоненты изображения,оставляя только высокочастотные
     //детали(края,текстуры,шумы)(полезно для выделения контуров или подчеркивания текстур в изображении)
@@ -83,10 +106,10 @@ public class Filters {
 
 //    public int[][] enhanceHighFrequency(int[][] image, double cutoff, int order) {
 //        // Применяем дискретное двумерное преобразование Фурье
-//        Complex[][] imageFFT = f.fourierTransform(image);
+//        core.Complex[][] imageFFT = f.fourierTransform(image);
 //
 //        // Применяем фильтр Баттерворта для усиления высоких частот
-//        Complex[][] filteredFFT = butterworthFilter(imageFFT, cutoff, order);
+//        core.Complex[][] filteredFFT = butterworthFilter(imageFFT, cutoff, order);
 //
 //        // Преобразуем обратно в пространственное представление
 //        int[][] filteredImage = f.fourierInverseTransform(filteredFFT);

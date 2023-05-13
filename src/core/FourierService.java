@@ -1,6 +1,8 @@
-public class FourierClass implements FourierMethods {
+package core;
 
-    public static Complex[] dft(Complex[] x) {
+public class FourierService implements FourierActions {
+
+    public Complex[] dft(Complex[] x) {
         int N = x.length;
         Complex[] X = new Complex[N];
         for (int k = 0; k < N; k++) {
@@ -14,7 +16,7 @@ public class FourierClass implements FourierMethods {
         return X;
     }
 
-    public static Complex[] inverseDft(Complex[] X) {
+    public Complex[] inverseDft(Complex[] X) {
         int N = X.length;
         Complex[] x = new Complex[N];
         for (int n = 0; n < N; n++) {
@@ -95,14 +97,14 @@ public class FourierClass implements FourierMethods {
 
 }
 //    // Calculates the 1D DFT of the input signal
-//    public static Complex[] dft(Complex[] signal) {
+//    public core.Complex[] dft(core.Complex[] signal) {
 //        int N = signal.length;
-//        Complex[] spectrum = new Complex[N];
+//        core.Complex[] spectrum = new core.Complex[N];
 //        for (int k = 0; k < N; k++) {
-//            Complex sum = new Complex(0, 0);
+//            core.Complex sum = new core.Complex(0, 0);
 //            for (int n = 0; n < N; n++) {
 //                double angle = 2 * Math.PI * k * n / N;
-//                Complex twiddle = new Complex(Math.cos(angle), -Math.sin(angle));
+//                core.Complex twiddle = new core.Complex(Math.cos(angle), -Math.sin(angle));
 //                sum = sum.add(signal[n].mul(twiddle));
 //            }
 //            spectrum[k] = sum;
@@ -111,32 +113,32 @@ public class FourierClass implements FourierMethods {
 //    }
 //
 //    // Calculates the 2D DFT of the input image
-//    public Complex[][] fourierTransform(int[][] image) {
+//    public core.Complex[][] fourierTransform(int[][] image) {
 //        int numRows = image.length;
 //        int numCols = image[0].length;
 //
-//        // Convert the image array to a Complex array
-//        Complex[][] signal = new Complex[numRows][numCols];
+//        // Convert the image array to a core.Complex array
+//        core.Complex[][] signal = new core.Complex[numRows][numCols];
 //        for (int y = 0; y < numRows; y++) {
 //            for (int x = 0; x < numCols; x++) {
-//                signal[y][x] = new Complex(image[y][x], 0);
+//                signal[y][x] = new core.Complex(image[y][x], 0);
 //            }
 //        }
 //
 //        // Perform the DFT on each row
-//        Complex[][] rowSpectrum = new Complex[numRows][numCols];
+//        core.Complex[][] rowSpectrum = new core.Complex[numRows][numCols];
 //        for (int y = 0; y < numRows; y++) {
 //            rowSpectrum[y] = dft(signal[y]);
 //        }
 //
 //        // Transpose the result and perform the DFT on each row
-//        Complex[][] colSpectrum = new Complex[numCols][numRows];
+//        core.Complex[][] colSpectrum = new core.Complex[numCols][numRows];
 //        for (int x = 0; x < numCols; x++) {
-//            Complex[] column = new Complex[numRows];
+//            core.Complex[] column = new core.Complex[numRows];
 //            for (int y = 0; y < numRows; y++) {
 //                column[y] = rowSpectrum[y][x];
 //            }
-//            Complex[] columnSpectrum = dft(column);
+//            core.Complex[] columnSpectrum = dft(column);
 //            for (int y = 0; y < numRows; y++) {
 //                colSpectrum[x][y] = columnSpectrum[y];
 //            }
@@ -146,54 +148,54 @@ public class FourierClass implements FourierMethods {
 //    }
 //
 //    // Calculates the 1D IDFT of the input spectrum
-//    public static Complex[] idft(Complex[] spectrum) {
+//    public core.Complex[] idft(core.Complex[] spectrum) {
 //        int N = spectrum.length;
-//        Complex[] signal = new Complex[N];
+//        core.Complex[] signal = new core.Complex[N];
 //        for (int n = 0; n < N; n++) {
-//            Complex sum = new Complex(0, 0);
+//            core.Complex sum = new core.Complex(0, 0);
 //            for (int k = 0; k < N; k++) {
 //                double angle = 2 * Math.PI * k * n / N;
-//                Complex twiddle = new Complex(Math.cos(angle), Math.sin(angle));
+//                core.Complex twiddle = new core.Complex(Math.cos(angle), Math.sin(angle));
 //                sum = sum.add(spectrum[k].mul(twiddle));
 //            }
-//            signal[n] = new Complex(sum.real / N, sum.imag / N);
+//            signal[n] = new core.Complex(sum.real / N, sum.imag / N);
 //            ;
 //        }
 //        return signal;
 //    }
 //
 //    // Calculates the 2D IDFT of the input spectrum
-//    public int[][] fourierInverseTransform(Complex[][] spectrum) {
+//    public int[][] fourierInverseTransform(core.Complex[][] spectrum) {
 //        int numRows = spectrum.length;
 //        int numCols = spectrum[0].length;
 //
 //        // Perform the IDFT on each column
-//        Complex[][] colSignal = new Complex[numCols][numRows];
+//        core.Complex[][] colSignal = new core.Complex[numCols][numRows];
 //        for (int x = 0; x < numCols; x++) {
-//            Complex[] column = new Complex[numRows];
+//            core.Complex[] column = new core.Complex[numRows];
 //            for (int y = 0; y < numRows; y++) {
 //                column[y] = spectrum[y][x];
 //            }
-//            Complex[] colSignal1D = idft(column);
+//            core.Complex[] colSignal1D = idft(column);
 //            for (int y = 0; y < numRows; y++) {
 //                colSignal[x][y] = colSignal1D[y];
 //            }
 //        }
 //
 //        // Transpose the result and perform the IDFT on each row
-//        Complex[][] rowSignal = new Complex[numRows][numCols];
+//        core.Complex[][] rowSignal = new core.Complex[numRows][numCols];
 //        for (int y = 0; y < numRows; y++) {
-//            Complex[] row = new Complex[numCols];
+//            core.Complex[] row = new core.Complex[numCols];
 //            for (int x = 0; x < numCols; x++) {
 //                row[x] = colSignal[x][y];
 //            }
-//            Complex[] rowSignal1D = idft(row);
+//            core.Complex[] rowSignal1D = idft(row);
 //            for (int x = 0; x < numCols; x++) {
 //                rowSignal[y][x] = rowSignal1D[x];
 //            }
 //        }
 //
-//        // Convert the Complex array to an integer array
+//        // Convert the core.Complex array to an integer array
 //        int[][] image = new int[numRows][numCols];
 //        for (int y = 0; y < numRows; y++) {
 //            for (int x = 0; x < numCols; x++) {

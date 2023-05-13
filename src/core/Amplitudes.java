@@ -1,3 +1,5 @@
+package core;
+
 public class Amplitudes {
     public double[][] getAmplitudes(Complex[][] complexArray) {
         int rows = complexArray.length;
