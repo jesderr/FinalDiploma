@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 
 public class ImagePanel extends JPanel {
     private BufferedImage bufferedImage;
+//    private Complex[][] spectrum;
     private final int x;
     private final int y;
 
@@ -16,14 +17,29 @@ public class ImagePanel extends JPanel {
 
     }
 
+//    public ImagePanel(Complex[][] spectrum) {
+//        this.spectrum = spectrum;
+//        this.setLayout(null);
+//    }
+
     public void setBufferedImage(final BufferedImage bufferedImage) {
         this.bufferedImage = bufferedImage;
-        this.setBounds(this.x, this.y, this.bufferedImage.getWidth(), this.bufferedImage.getHeight());
+        int scaledWidth = 250;
+        int scaledHeight = 250;
+        this.setBounds(this.x, this.y, scaledWidth, scaledHeight);
+        this.repaint();
     }
 
     @Override
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
-        g.drawImage(this.bufferedImage,0,0,this);
+        if (this.bufferedImage != null) {
+            int scaledWidth = 250;
+            int scaledHeight = 250;
+            g.drawImage(this.bufferedImage, 0, 0, scaledWidth, scaledHeight, null);
+        }
+//        g.drawImage(this.bufferedImage,0,0,this);
     }
+
+
 }

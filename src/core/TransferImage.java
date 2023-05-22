@@ -89,14 +89,22 @@ public class TransferImage implements ImageActions {
                 image.setRGB(j, i, rgb);
             }
         }
+//        try {
+//            ImageIO.write(image, "jpg", new File("D:/test/testGrayPixels.jpg"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        return image;
+    }
+
+    public void tryToSave(BufferedImage finalImage){
         try {
-            ImageIO.write(image, "jpg", new File("D:/test/testGrayPixels.jpg"));
+            ImageIO.write(finalImage, "jpg", new File("D:/test/testGrayPixels.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return image;
     }
+
     public int[][] grayToRGB(int[][] grayPixels){
         int height = grayPixels.length;
         int width = grayPixels[0].length;

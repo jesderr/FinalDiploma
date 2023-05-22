@@ -1,6 +1,9 @@
 package core;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class ImageProcessor {
     private final TransferImage transferImage;
@@ -34,30 +37,49 @@ public class ImageProcessor {
         return this.cutoff;
     }
 
+    public Complex[][] getComplex(BufferedImage image){
+        return this.fourier.fourierTransform(this.transferImage.convertToPixels(image));
+    }
+
 
     public BufferedImage process(BufferedImage bufferedImage) {
         int[][] grayPixels = transferImage.pixelsToGray(bufferedImage);
         Complex[][] fourierImage = fourier.fourierTransform(grayPixels);
-        Complex[][] fourierImageFFT;
-        // rewrite to switch
-//        switch (this.filter) {
-//            case BUTTERWORTH_FILTER ->
-//                    fourierImageFFT = filterService.butterworthFilter(fourierImage, this.cutoff, this.order);
-//            case LOW_PASS_FILTER -> fourierImageFFT = filterService.applyLowPassFilter(fourierImage, this.cutoff);
-//            case HIGH_PASS_FILTER -> fourierImageFFT = filterService.applyHighPassFilter(fourierImage, this.cutoff);
-//            default -> System.out.println("Break");
-//        }
-
-        if (filter == Filter.BUTTERWORTH_FILTER) {
-            fourierImageFFT = filterService.butterworthFilter(fourierImage, this.cutoff, this.order);
-        } else if (filter == Filter.HIGH_PASS_FILTER) {
-            fourierImageFFT = filterService.applyHighPassFilter(fourierImage,this.cutoff);
-        } else {
-            fourierImageFFT = filterService.applyLowPassFilter(fourierImage, this.cutoff);
-        }
+        Complex[][] fourierImageFFT = switch (filter) {
+            case BUTTERWORTH_FILTER -> filterService.butterworthFilter(fourierImage, this.cutoff, this.order);
+            case HIGH_PASS_FILTER -> filterService.applyHighPassFilter(fourierImage, this.cutoff);
+            case LOW_PASS_FILTER -> filterService.applyLowPassFilter(fourierImage, this.cutoff);
+        };
 
         int[][] result = fourier.fourierInverseTransform(fourierImageFFT);
         BufferedImage resultImage = transferImage.saveGrayImage(result);
         return resultImage;
+    }
+
+    public void saveImage(BufferedImage saveImage){
+        try {
+            // Выбор файла и пути сохранения изображения
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showSaveDialog(null);
+
+            if (result == JFileChooser.APPROVE_OPTION) {
+                // Получение выбранного файла
+                File selectedFile = fileChooser.getSelectedFile();
+
+                String filePath = selectedFile.getAbsolutePath();
+                if (!filePath.toLowerCase().endsWith(".jpg")) {
+                    selectedFile = new File(filePath + ".jpg");
+                }
+
+                // Сохранение изображения в выбранный файл
+                ImageIO.write(saveImage, "jpg", selectedFile);
+
+                // Вывод сообщения об успешном сохранении
+                JOptionPane.showMessageDialog(null, "Изображение сохранено успешно.");
+            }
+        } catch (Exception e) {
+            // Обработка ошибки при сохранении изображения
+            JOptionPane.showMessageDialog(null, "Ошибка при сохранении изображения: " + e.getMessage());
+        }
     }
 }
