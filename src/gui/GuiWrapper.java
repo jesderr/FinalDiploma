@@ -19,23 +19,25 @@ public class GuiWrapper {
     private JButton openFileChooserBtn;
     private final ImagePanel originalImagePanel;
     private final ImagePanel resultImagePanel;
+    private final SpectrumPanel fourierSpectrumPanel;
     private BufferedImage originalBufferedImage;
     private BufferedImage finalBufferedImage;
     private final JPanel mainPanel;
     private Filter filter;
     private JComboBox<Filter> filtersComboBox;
-    private JLabel jLabelForCutoff;
-    private JLabel jLabelForOrder;
-    private JLabel jLabelForSliderCutoff;
-    private JSlider jSliderForCutoff;
-    private JSlider jSliderForOrder;
+    private JLabel cutoffLabel;
+    private JLabel orderLabel;
+    private JLabel cutoffSliderLabel;
+    private JSlider cutoffSlider;
+    private JSlider orderSlider;
 
     private JButton jButtonForSaveResult;
 
     public GuiWrapper() {
+        this.imageProcessor = new ImageProcessor();
         this.mainFrame = new JFrame("Main");
         this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.mainFrame.setBounds(0, 0, 900, 700);
+        this.mainFrame.setBounds(0, 0, 1100, 700);
         this.mainFrame.setVisible(true);
         this.mainFrame.setResizable(false);
 
@@ -46,193 +48,99 @@ public class GuiWrapper {
         this.configureFileChooser();
         this.configureOpenFileChooserBtn();
         this.configureFilterComboBox();
-        this.configureSliderForCutoff();
+        this.configureCutoffSlider();
         this.configureSliderForOrder();
         this.configureSaveBtn();
 
         this.originalImagePanel = new ImagePanel(25, 100);
         this.resultImagePanel = new ImagePanel(350, 100);
+        this.fourierSpectrumPanel = new SpectrumPanel(650, 100);
 
         this.mainPanel.add(this.applyBtn);
         this.mainPanel.add(this.openFileChooserBtn);
         this.mainPanel.add(this.fileChooser);
         this.mainPanel.add(this.originalImagePanel);
         this.mainPanel.add(this.resultImagePanel);
+        this.mainPanel.add(this.fourierSpectrumPanel);
         this.mainFrame.add(this.mainPanel);
         this.mainPanel.add(this.filtersComboBox);
-        this.mainPanel.add(this.jLabelForCutoff);
-        this.mainPanel.add(this.jSliderForCutoff);
-        this.mainPanel.add(this.jLabelForSliderCutoff);
-        this.mainPanel.add(this.jSliderForOrder);
-        this.mainPanel.add(this.jLabelForOrder);
+        this.mainPanel.add(this.cutoffLabel);
+        this.mainPanel.add(this.cutoffSlider);
+        this.mainPanel.add(this.cutoffSliderLabel);
+        this.mainPanel.add(this.orderSlider);
+        this.mainPanel.add(this.orderLabel);
         this.mainPanel.add(this.jButtonForSaveResult);
     }
 
-
-//    public void configureSliderForOrder() {
-//        this.jSliderForOrder = new JSlider(JSlider.HORIZONTAL, -5, 5, 2);
-//        this.jSliderForOrder.setBounds(10, 540, 660, 50);
-//        this.jSliderForOrder.setMajorTickSpacing(1);
-//        this.jSliderForOrder.setPaintLabels(true);
-//        this.jSliderForOrder.setPaintTicks(true);
-//        this.jSliderForOrder.setSnapToTicks(true);
-//        this.jLabelForOrder = new JLabel("Order = " + 2);
-//        this.jLabelForOrder.setBounds(480, 400, 210, 30);
-//        this.jLabelForOrder.setVisible(false);
-//        this.jSliderForOrder.setVisible(false);
-//    }
-//
-//    public void configureSliderForCutoff() {
-//        this.jSliderForCutoff = new JSlider(JSlider.HORIZONTAL, 0, 200, 100);
-//        this.jSliderForCutoff.setBounds(10, 440, 800, 50);
-//        this.jSliderForCutoff.setMajorTickSpacing(10);
-//        this.jSliderForCutoff.setPaintLabels(true);
-//        this.jSliderForCutoff.setPaintTicks(true);
-//        this.jSliderForCutoff.setSnapToTicks(true);
-//        this.jLabelForSliderCutoff = new JLabel("slider value = " + 100);
-//        this.jLabelForSliderCutoff.setVisible(false);
-//        this.jLabelForSliderCutoff.setBounds(240, 400, 200, 30);
-//        this.jSliderForCutoff.setVisible(false);
-//    }
-
     public void configureSliderForOrder() {
-        this.jSliderForOrder = new JSlider(JSlider.HORIZONTAL, -5, 5, 2);
-        this.jSliderForOrder.setBounds(10, 540, 660, 50);
-        this.jSliderForOrder.setMajorTickSpacing(1);
-        this.jSliderForOrder.setPaintLabels(true);
-        this.jSliderForOrder.setPaintTicks(true);
-        this.jSliderForOrder.setSnapToTicks(true);
-        this.jLabelForOrder = new JLabel("Order = " + 2);
-        this.jLabelForOrder.setBounds(480, 400, 210, 30);
-        this.jLabelForOrder.setVisible(false);
-        this.jSliderForOrder.setVisible(false);
-        this.jSliderForOrder.addChangeListener(eventForOrder -> {
+        this.orderSlider = new JSlider(JSlider.HORIZONTAL, -5, 5, 2);
+        this.orderSlider.setBounds(10, 540, 660, 50);
+        this.orderSlider.setMajorTickSpacing(1);
+        this.orderSlider.setPaintLabels(true);
+        this.orderSlider.setPaintTicks(true);
+        this.orderLabel = new JLabel("Order = " + 2);
+        this.orderLabel.setBounds(480, 400, 210, 30);
+        this.orderLabel.setVisible(false);
+        this.orderSlider.setVisible(false);
+        this.orderSlider.addChangeListener(eventForOrder -> {
             JSlider sourceOrder = (JSlider) eventForOrder.getSource();
             if (!sourceOrder.getValueIsAdjusting()) {
-                int valueForOrder = sourceOrder.getValue();
-                jLabelForOrder.setText("Order = " + valueForOrder);
+                int orderValue = sourceOrder.getValue();
+                orderLabel.setText("Order = " + orderValue);
+                finalBufferedImage = imageProcessor.process(originalBufferedImage, filter, cutoffSlider.getValue(),
+                        orderValue);
+                resultImagePanel.setBufferedImage(finalBufferedImage);
             }
         });
     }
 
-    public void configureSliderForCutoff() {
-        this.jSliderForCutoff = new JSlider(JSlider.HORIZONTAL, 0, 200, 100);
-        this.jSliderForCutoff.setBounds(10, 440, 800, 50);
-        this.jSliderForCutoff.setMajorTickSpacing(10);
-        this.jSliderForCutoff.setPaintLabels(true);
-        this.jSliderForCutoff.setPaintTicks(true);
-        this.jSliderForCutoff.setSnapToTicks(true);
-        this.jLabelForSliderCutoff = new JLabel("Slider value = " + 100);
-        this.jLabelForSliderCutoff.setBounds(240, 400, 200, 30);
-        this.jSliderForCutoff.addChangeListener(event -> {
+    public void configureCutoffSlider() {
+        this.cutoffSlider = new JSlider(JSlider.HORIZONTAL, 0, 200, 100);
+        this.cutoffSlider.setBounds(10, 440, 800, 50);
+        this.cutoffSliderLabel = new JLabel("Slider value = " + 100);
+        this.cutoffSliderLabel.setBounds(240, 400, 200, 30);
+        this.cutoffSlider.addChangeListener(event -> {
             JSlider source = (JSlider) event.getSource();
             if (!source.getValueIsAdjusting()) {
-                int value = source.getValue();
-                jLabelForSliderCutoff.setText("Slider value = " + value);
+                int cutoffValue = source.getValue();
+                cutoffSliderLabel.setText("Slider value = " + cutoffValue);
+                finalBufferedImage = imageProcessor.process(originalBufferedImage, filter, cutoffValue,
+                        orderSlider.getValue());
+                resultImagePanel.setBufferedImage(finalBufferedImage);
             }
         });
     }
 
-//    public void configureApplyBtn() {
-//        this.applyBtn = new JButton("apply");
-//        this.applyBtn.setBounds(10, 10, 70, 30);
-//        this.jLabelForCutoff = new JLabel("Max cutoff = ");
-//        this.jLabelForCutoff.setBounds(10, 400, 200, 30);
-//        this.jLabelForCutoff.setVisible(false);
-//        this.applyBtn.addActionListener(e -> {
-//            jLabelForSliderCutoff.setVisible(true);
-//            jLabelForCutoff.setVisible(true);
-//            if (filter == Filter.BUTTERWORTH_FILTER) {
-//                this.imageProcessor = new ImageProcessor(this.filter, 100, 2);
-//                jSliderForOrder.setVisible(true);
-//                jLabelForOrder.setVisible(true);
-//                jSliderForCutoff.setValue(100);
-//                jSliderForOrder.setValue(2);
-//            } else {
-//                jSliderForOrder.setVisible(false);
-//                jLabelForOrder.setVisible(false);
-//                jSliderForCutoff.setValue(100);
-//                this.imageProcessor = new ImageProcessor(this.filter, 100);
-//            }
-//            BufferedImage resultImage = imageProcessor.process(originalBufferedImage);
-//            resultImagePanel.setBufferedImage(resultImage);
-//            jSliderForCutoff.setVisible(true);
-//            jLabelForCutoff.setText("Max cutoff = " + this.imageProcessor.getMaxCutoff(originalBufferedImage));
-//            jSliderForCutoff.setMaximum((int) this.imageProcessor.getMaxCutoff(originalBufferedImage));
-//            jSliderForCutoff.addChangeListener(event -> {
-//                JSlider source = (JSlider) event.getSource();
-//                if (!source.getValueIsAdjusting()) {
-//                    int value = source.getValue();
-//                    jLabelForSliderCutoff.setText("slider value = " + value);
-//                    if (filter == Filter.BUTTERWORTH_FILTER) {
-//                        this.imageProcessor = new ImageProcessor(this.filter, value, 2);
-//                    } else {
-//                        this.imageProcessor = new ImageProcessor(this.filter, value);
-//                    }
-//                    BufferedImage nextResultImage = imageProcessor.process(originalBufferedImage);
-//                    resultImagePanel.setBufferedImage(nextResultImage);
-//                }
-//            });
-//            if (jSliderForOrder.isVisible()) {
-//                jSliderForOrder.addChangeListener(eventForOrder -> {
-//                    JSlider sourceOrder = (JSlider) eventForOrder.getSource();
-//                    if (!sourceOrder.getValueIsAdjusting()) {
-//                        int valueForOrder = sourceOrder.getValue();
-//                        jLabelForOrder.setText("Order = " + valueForOrder);
-//                        this.imageProcessor = new ImageProcessor(this.filter, jSliderForCutoff.getValue(), valueForOrder);
-//                        BufferedImage nextResultImage = imageProcessor.process(originalBufferedImage);
-//                        resultImagePanel.setBufferedImage(nextResultImage);
-//                    }
-//                });
-//            }
-//        });
-//    }
+    public void configureCutoffSliderTicks() {
+        double maxCutoff = imageProcessor.getMaxCutoff(originalBufferedImage);
+        this.cutoffSlider.setVisible(true);
+        this.cutoffLabel.setText("Max cutoff = " + maxCutoff);
+        this.cutoffSlider.setMaximum((int) maxCutoff);
+        this.cutoffSlider.setMajorTickSpacing((int) maxCutoff / 10);
+        this.cutoffSlider.setPaintLabels(true);
+        this.cutoffSlider.setPaintTicks(true);
+    }
 
     public void configureApplyBtn() {
         this.applyBtn = new JButton("Apply");
         this.applyBtn.setBounds(10, 10, 70, 30);
-        this.jLabelForCutoff = new JLabel("Max cutoff = ");
-        this.jLabelForCutoff.setBounds(10, 400, 200, 30);
+        this.cutoffLabel = new JLabel("Max cutoff = ");
+        this.cutoffLabel.setBounds(10, 400, 200, 30);
         this.applyBtn.addActionListener(e -> {
             jButtonForSaveResult.setVisible(true);
             if (filter == Filter.BUTTERWORTH_FILTER) {
-                this.imageProcessor = new ImageProcessor(this.filter, jSliderForCutoff.getValue(), jSliderForOrder.getValue());
-                jSliderForOrder.setVisible(true);
-                jLabelForOrder.setVisible(true);
-            } else {
-                this.imageProcessor = new ImageProcessor(this.filter, jSliderForCutoff.getValue());
+                orderSlider.setVisible(true);
+                orderLabel.setVisible(true);
             }
-            finalBufferedImage = imageProcessor.process(originalBufferedImage);
+            finalBufferedImage = imageProcessor.process(originalBufferedImage, filter,
+                    cutoffSlider.getValue(), orderSlider.getValue());
             resultImagePanel.setBufferedImage(finalBufferedImage);
-            jSliderForCutoff.setVisible(true);
-            jLabelForCutoff.setText("Max cutoff = " + this.imageProcessor.getMaxCutoff(originalBufferedImage));
-            jSliderForCutoff.setMaximum((int) this.imageProcessor.getMaxCutoff(originalBufferedImage));
-            jSliderForCutoff.addChangeListener(event -> {
-                JSlider source = (JSlider) event.getSource();
-                if (!source.getValueIsAdjusting()) {
-                    int value = source.getValue();
-                    jLabelForSliderCutoff.setText("Slider value = " + value);
-                    if (filter == Filter.BUTTERWORTH_FILTER) {
-                        this.imageProcessor = new ImageProcessor(this.filter, value, 2);
-                    } else {
-                        this.imageProcessor = new ImageProcessor(this.filter, value);
-                    }
-                    finalBufferedImage = imageProcessor.process(originalBufferedImage);
-                    resultImagePanel.setBufferedImage(finalBufferedImage);
-                }
-            });
-            if (jSliderForOrder.isVisible()) {
-                jSliderForOrder.addChangeListener(eventForOrder -> {
-                    JSlider sourceOrder = (JSlider) eventForOrder.getSource();
-                    if (!sourceOrder.getValueIsAdjusting()) {
-                        int valueForOrder = sourceOrder.getValue();
-                        jLabelForOrder.setText("Order = " + valueForOrder);
-                        this.imageProcessor = new ImageProcessor(this.filter, jSliderForCutoff.getValue(), valueForOrder);
-                        finalBufferedImage = imageProcessor.process(originalBufferedImage);
-                        resultImagePanel.setBufferedImage(finalBufferedImage);
-                    }
-                });
-            }
+            // TODO: think about it
+            //double[][] spectrum = imageProcessor.calculateSpectrum(originalBufferedImage);
+            //fourierSpectrumPanel.setSpectrum(spectrum);
+            //fourierSpectrumPanel.setBufferedImage(originalBufferedImage);
+
+            this.configureCutoffSliderTicks();
         });
     }
 
@@ -277,18 +185,18 @@ public class GuiWrapper {
             switch ((Filter) Objects.requireNonNull(filtersComboBox.getSelectedItem())) {
                 case HIGH_PASS_FILTER -> {
                     filter = Filter.HIGH_PASS_FILTER;
-                    jSliderForOrder.setVisible(false);
-                    jLabelForOrder.setVisible(false);
+                    orderSlider.setVisible(false);
+                    orderLabel.setVisible(false);
                 }
                 case LOW_PASS_FILTER -> {
                     filter = Filter.LOW_PASS_FILTER;
-                    jSliderForOrder.setVisible(false);
-                    jLabelForOrder.setVisible(false);
+                    orderSlider.setVisible(false);
+                    orderLabel.setVisible(false);
                 }
                 case BUTTERWORTH_FILTER -> {
                     filter = Filter.BUTTERWORTH_FILTER;
-                    jSliderForOrder.setVisible(true);
-                    jLabelForOrder.setVisible(true);
+                    orderSlider.setVisible(true);
+                    orderLabel.setVisible(true);
                 }
                 default -> System.out.println("Mistake");
             }

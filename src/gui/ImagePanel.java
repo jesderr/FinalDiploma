@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 
 public class ImagePanel extends JPanel {
     private BufferedImage bufferedImage;
-//    private Complex[][] spectrum;
     private final int x;
     private final int y;
 
@@ -16,11 +15,6 @@ public class ImagePanel extends JPanel {
         this.y = y;
 
     }
-
-//    public ImagePanel(Complex[][] spectrum) {
-//        this.spectrum = spectrum;
-//        this.setLayout(null);
-//    }
 
     public void setBufferedImage(final BufferedImage bufferedImage) {
         this.bufferedImage = bufferedImage;

@@ -8,6 +8,7 @@ public interface ImageActions {
     public BufferedImage saveGrayImage(int[][] pixels);
 
     public void convertToImage(int[][] pixels);
+    int[][] pixelsToGray(BufferedImage image);
 
 
 }

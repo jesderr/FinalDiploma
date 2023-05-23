@@ -1,6 +1,42 @@
 package core;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
 public class FourierService implements FourierActions {
+
+    public double[][] calculateSpectrum(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        // Создание массива для хранения Фурье-спектра
+        double[][] spectrum = new double[height][width];
+
+        // Преобразование каждого пикселя изображения
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                double sumReal = 0.0;
+                double sumImaginary = 0.0;
+
+                // Вычисление суммы реальной и мнимой частей для каждой частоты
+                for (int u = 0; u < width; u++) {
+                    for (int v = 0; v < height; v++) {
+                        Color pixelColor = new Color(image.getRGB(u, v));
+                        double intensity = pixelColor.getRed() / 255.0; // Интенсивность пикселя (от 0.0 до 1.0)
+                        double angle = 2 * Math.PI * ((u * x / (double) width) + (v * y / (double) height));
+                        sumReal += intensity * Math.cos(angle);
+                        sumImaginary -= intensity * Math.sin(angle);
+                    }
+                }
+
+                // Вычисление амплитуды Фурье-спектра
+                double amplitude = Math.sqrt(sumReal * sumReal + sumImaginary * sumImaginary);
+                spectrum[y][x] = amplitude;
+            }
+        }
+
+        return spectrum;
+    }
 
     public Complex[] dft(Complex[] x) {
         int N = x.length;

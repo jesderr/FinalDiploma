@@ -3,9 +3,6 @@ package core;
 import java.awt.image.BufferedImage;
 
 public class FilterService {
-    FourierService f = new FourierService();
-    //параметры порядок фильтра и частоту среза,чтобы определить какие частоты следует пропустить
-    // или ослабить
 
     public double getMaxDistanse(BufferedImage image){
         int rows = image.getHeight();
