@@ -34,7 +34,7 @@ public class ImageProcessor {
         };
 
         int[][] result = fourierService.fourierInverseTransform(fourierImageFFT);
-        BufferedImage resultImage = transferImage.saveGrayImage(result);
+        BufferedImage resultImage = transferImage.getGrayImage(result);
         return resultImage;
     }
 

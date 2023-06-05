@@ -77,7 +77,7 @@ public class TransferImage implements ImageActions {
         return pixels;
     }
 
-    public BufferedImage saveGrayImage(int[][] pixels) {
+    public BufferedImage getGrayImage(int[][] pixels) {
         int height = pixels.length;
         int width = pixels[0].length;
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
@@ -89,23 +89,10 @@ public class TransferImage implements ImageActions {
                 image.setRGB(j, i, rgb);
             }
         }
-//        try {
-//            ImageIO.write(image, "jpg", new File("D:/test/testGrayPixels.jpg"));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
         return image;
     }
 
-    public void tryToSave(BufferedImage finalImage){
-        try {
-            ImageIO.write(finalImage, "jpg", new File("D:/test/testGrayPixels.jpg"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public int[][] grayToRGB(int[][] grayPixels){
+    public int[][] grayToRGB(int[][] grayPixels) {
         int height = grayPixels.length;
         int width = grayPixels[0].length;
         int[][] rgbPixels = new int[height][width];
@@ -118,6 +105,24 @@ public class TransferImage implements ImageActions {
             }
         }
         return rgbPixels;
+    }
+
+    public int[][] pixelsToGrayP(int[][] pixels) {
+        int width = pixels.length;
+        int height = pixels[0].length;
+        int[][] grayPixels = new int[height][width];
+
+        for (int x = 0; x < height; x++) {
+            for (int y = 0; y < width; y++) {
+                int pixel = pixels[x][y];
+                int r = (pixel >> 16) & 0xff;
+                int g = (pixel >> 8) & 0xff;
+                int b = pixel & 0xff;
+                int grayscale = (int) (0.2126 * r + 0.7152 * g + 0.0722 * b);
+                pixels[x][y] = grayscale;
+            }
+        }
+        return grayPixels;
     }
 
     public int[][] imageToGrayPixels(BufferedImage image) {
@@ -133,6 +138,37 @@ public class TransferImage implements ImageActions {
             }
         }
         return grayPixels;
+    }
+
+    public void convertToImage(int[][] pixels) {
+        int height = pixels.length;
+        int width = pixels[0].length;
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        for (int x = 0; x < height; x++) {
+            for (int y = 0; y < width; y++) {
+                image.setRGB(x, y, pixels[x][y]);
+            }
+        }
+        try {
+            ImageIO.write(image, "jpg", new File("D:/test/testSaveFourier.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+/*
+
+    private double getMaxAmplitude(double[][] amplitudes) {
+        double max = 0;
+        for (double[] row : amplitudes) {
+            for (double amplitude : row) {
+                if (amplitude > max) {
+                    max = amplitude;
+                }
+            }
+        }
+        return max;
     }
 
     public BufferedImage createImageFromAmplitudes(double[][] amplitudes) {
@@ -153,87 +189,14 @@ public class TransferImage implements ImageActions {
 
     }
 
-    private double getMaxAmplitude(double[][] amplitudes) {
-        double max = 0;
-        for (double[] row : amplitudes) {
-            for (double amplitude : row) {
-                if (amplitude > max) {
-                    max = amplitude;
-                }
-            }
-        }
-        return max;
-    }
 
-    public void convertToImage(int[][] pixels) {
-        int height = pixels.length;
-        int width = pixels[0].length;
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        for (int x = 0; x < height; x++) {
-            for (int y = 0; y < width; y++) {
-                image.setRGB(x, y, pixels[x][y]);
-            }
-        }
+    public void tryToSave(BufferedImage finalImage){
         try {
-            ImageIO.write(image, "jpg", new File("D:/test/testSaveFourier.jpg"));
+            ImageIO.write(finalImage, "jpg", new File("D:/test/testGrayPixels.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-//    СТРОИТ ФУРЬЕ-ОБРАЗ(ДОДЕЛАТЬ)
-//    public BufferedImage createImageFromAmplitudes(double[][] amplitudes) {
-//        int height = amplitudes.length;
-//        int width = amplitudes[0].length;
-//
-//        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
-//
-//        double maxAmplitude = getMaxAmplitude(amplitudes);
-//
-//        for (int y = 0; y < height; y++) {
-//            for (int x = 0; x < width; x++) {
-//                int gray = (int) (255 * amplitudes[y][x] / maxAmplitude);
-//                image.setRGB(x, y, (gray << 16) | (gray << 8) | gray);
-//            }
-//        }
-//        return image;
-//
-//    }
-//
-//    private double getMaxAmplitude(double[][] amplitudes) {
-//        double max = 0;
-//        for (double[] row : amplitudes) {
-//            for (double amplitude : row) {
-//                if (amplitude > max) {
-//                    max = amplitude;
-//                }
-//            }
-//        }
-//        return max;
-//    }
-
-}
-
-
-
-
-/*
-
-    public int[][] convertToPixelsTYPA(BufferedImage image) {
-        final int width = image.getWidth();
-        final int height = image.getHeight();
-        int[][] arrayOfPixels = new int[width][height];
-
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                arrayOfPixels[i][j] = image.getRGB(i,j);
-            }
-        }
-        return arrayOfPixels;
-    }
-
-
-
 
 public int[][] pixelsToGray(int[][] pixels) {
         int width = pixels.length;

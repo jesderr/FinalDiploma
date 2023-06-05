@@ -3,12 +3,16 @@ package core;
 import java.awt.image.BufferedImage;
 
 public interface ImageActions {
-    public int[][] convertToPixels(BufferedImage image);
+     int[][] convertToPixels(BufferedImage image);
 
-    public BufferedImage saveGrayImage(int[][] pixels);
+     BufferedImage getGrayImage(int[][] pixels);
 
-    public void convertToImage(int[][] pixels);
+     void convertToImage(int[][] pixels);
     int[][] pixelsToGray(BufferedImage image);
+
+    int[][] pixelsToGrayP(int[][] pixels) ;
+
+     int[][] grayToRGB(int[][] grayPixels);
 
 
 }

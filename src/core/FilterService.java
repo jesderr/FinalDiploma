@@ -27,18 +27,13 @@ public class FilterService {
         int centerY = rows / 2;
 
         Complex[][] filteredFFT = new Complex[rows][cols];
-//        double maxDistance = Double.MIN_VALUE;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 double distance = Math.sqrt(Math.pow(i - centerY, 2) + Math.pow(j - centerX, 2));
-//                if(distance > maxDistance){
-//                    maxDistance = distance;
-//                }
                 double butterworth = 1 / (1 + Math.pow(distance / cutoff, 2 * order));
                 filteredFFT[i][j] = imageFFT[i][j].multiply(butterworth);
             }
         }
-//        System.out.println("Max distance = "+ maxDistance);
         return filteredFFT;
     }
 
@@ -76,18 +71,16 @@ public class FilterService {
     public Complex[][] applyLowPassFilter(Complex[][] imageFFT, double cutoff) {
         int rows = imageFFT.length;
         int cols = imageFFT[0].length;
-
         // создаем новый двумерный массив комплексных чисел, чтобы сохранить измененный Фурье-образ
         Complex[][] filteredFFT = new Complex[rows][cols];
-
         // вычисляем центр изображения, чтобы определить расстояние от каждой точки до центра
         int centerX = cols / 2;
         int centerY = rows / 2;
-
         // проходимся по каждой точке Фурье-образа
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 // вычисляем расстояние от текущей точки до центра
+                //Math.sqrt(Math.pow(i - centerY, 2) + Math.pow(j - centerX, 2))
                 double distance = Math.sqrt(Math.pow(i - centerY, 2) + Math.pow(j - centerX, 2));
                 // если расстояние меньше заданного порога, оставляем значение комплексного числа без изменений
                 if (distance <= cutoff) {

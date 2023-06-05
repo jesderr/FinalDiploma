@@ -44,4 +44,24 @@ public class Complex {
     public double abs(){
         return Math.sqrt(this.real*this.real + this.imag*this.imag);
     }
+
+    public Complex copy() {
+        return new Complex(this.real, this.imag);
+    }
+
+    public Complex createComplexFromPolar(double magnitude, double phase) {
+        // Вычисление реальной и мнимой частей комплексного числа
+        double real = magnitude * Math.cos(phase);
+        double imaginary = magnitude * Math.sin(phase);
+
+        // Создание комплексного числа с помощью метода fromPolar()
+        return new Complex(real, imaginary);
+    }
+    public double getPhase() {
+        return Math.atan2(this.imag, this.real);
+    }
+
+    public double getMagnitude() {
+        return Math.sqrt(this.real * this.real + this.imag * this.imag);
+    }
 }
