@@ -1,4 +1,7 @@
-package core;
+package core.impl;
+
+import core.impl.Complex;
+import core.interfaces.FourierActions;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -1,4 +1,6 @@
-package core;
+package core.interfaces;
+
+import core.impl.Complex;
 
 import java.awt.image.BufferedImage;
 

@@ -1,4 +1,4 @@
-package core;
+package core.impl;
 
 public enum Filter {
     BUTTERWORTH_FILTER,

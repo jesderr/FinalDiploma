@@ -14,7 +14,7 @@ public class Main {
 
 
 
-//        core.TransferImage transferImage = new core.TransferImage();
+//        core.impl.TransferImage transferImage = new core.impl.TransferImage();
 //        core.FourierClass fourier = new core.FourierClass();
 //        core.Amplitudes ampl = new core.Amplitudes();
 //        core.Filters filter = new core.Filters();
@@ -37,18 +37,18 @@ public class Main {
 //
 //        //transferImage.saveGrayImage(grayPixels);
 //        // Получение фурье-образа изображения
-//        core.Complex[][] fourierImage = fourier.fourierTransform(grayPixels);
+//        core.impl.Complex[][] fourierImage = fourier.fourierTransform(grayPixels);
 //
 //        // Применение фильтра на фурье-образ
 //
 //        double cutoff = -100.0;
-////        core.Complex[][] fourierImageFFT = filter.applyLowPassFilter(fourierImage,cutoff);
-////        core.Complex[][] fourierImageFFT = filter.applyHighPassFilter(fourierImage,cutoff);
+////        core.impl.Complex[][] fourierImageFFT = filter.applyLowPassFilter(fourierImage,cutoff);
+////        core.impl.Complex[][] fourierImageFFT = filter.applyHighPassFilter(fourierImage,cutoff);
 ////        fourierImage = filter.applyLowPassFilter(fourierImage,cutoff);
 ////        cutoff = 20.0;
 ////        fourierImage = filter.applyHighPassFilter(fourierImage,cutoff);
 //        int order = 2;
-//        core.Complex[][] fourierImageFFT = filter.butterworthFilter(fourierImage,cutoff,order);
+//        core.impl.Complex[][] fourierImageFFT = filter.butterworthFilter(fourierImage,cutoff,order);
 //
 //        int[][] result = fourier.fourierInverseTransform(fourierImageFFT);
 //

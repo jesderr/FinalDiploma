@@ -1,4 +1,6 @@
-package core;
+package core.impl;
+
+import core.impl.Complex;
 
 import java.awt.image.BufferedImage;
 
@@ -42,14 +44,11 @@ public class FilterService {
     public Complex[][] applyHighPassFilter(Complex[][] imageFFT, double cutoff) {
         int rows = imageFFT.length;
         int cols = imageFFT[0].length;
-
         // создаем новый двумерный массив комплексных чисел, чтобы сохранить измененный Фурье-образ
         Complex[][] filteredFFT = new Complex[rows][cols];
-
         // вычисляем центр изображения, чтобы определить расстояние от каждой точки до центра
         int centerX = cols / 2;
         int centerY = rows / 2;
-
         // проходимся по каждой точке Фурье-образа
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -64,7 +63,6 @@ public class FilterService {
                 }
             }
         }
-
         return filteredFFT;
     }
     //фильтр нижних частот, который оставляет только низкочастотные компоненты изображения
@@ -96,10 +94,10 @@ public class FilterService {
 
 //    public int[][] enhanceHighFrequency(int[][] image, double cutoff, int order) {
 //        // Применяем дискретное двумерное преобразование Фурье
-//        core.Complex[][] imageFFT = f.fourierTransform(image);
+//        core.impl.Complex[][] imageFFT = f.fourierTransform(image);
 //
 //        // Применяем фильтр Баттерворта для усиления высоких частот
-//        core.Complex[][] filteredFFT = butterworthFilter(imageFFT, cutoff, order);
+//        core.impl.Complex[][] filteredFFT = butterworthFilter(imageFFT, cutoff, order);
 //
 //        // Преобразуем обратно в пространственное представление
 //        int[][] filteredImage = f.fourierInverseTransform(filteredFFT);

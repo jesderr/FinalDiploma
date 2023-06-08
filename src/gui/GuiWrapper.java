@@ -8,8 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-import core.Filter;
-import core.ImageProcessor;
+import core.impl.Filter;
+import core.impl.ImageProcessor;
 
 public class GuiWrapper {
     private final JFrame mainFrame;
@@ -127,6 +127,7 @@ public class GuiWrapper {
         this.cutoffLabel = new JLabel("Max cutoff = ");
         this.cutoffLabel.setBounds(10, 400, 200, 30);
         this.applyBtn.addActionListener(e -> {
+            long start = System.currentTimeMillis();
             jButtonForSaveResult.setVisible(true);
             if (filter == Filter.BUTTERWORTH_FILTER) {
                 orderSlider.setVisible(true);
@@ -135,6 +136,8 @@ public class GuiWrapper {
             finalBufferedImage = imageProcessor.process(originalBufferedImage, filter,
                     cutoffSlider.getValue(), orderSlider.getValue());
             resultImagePanel.setBufferedImage(finalBufferedImage);
+            long finish = System.currentTimeMillis();
+            System.out.println("Proshlo : " + (finish - start));
             // TODO: think about it
             //double[][] spectrum = imageProcessor.calculateSpectrum(originalBufferedImage);
             //fourierSpectrumPanel.setSpectrum(spectrum);

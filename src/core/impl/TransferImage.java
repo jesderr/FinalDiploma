@@ -1,4 +1,6 @@
-package core;
+package core.impl;
+
+import core.interfaces.ImageActions;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
